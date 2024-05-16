@@ -16,13 +16,10 @@ steps:
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
-
-- task: NuGetCommand@2
-  displayName: 'NuGet Restore'
-  inputs:
-    command: 'restore'
-    restoreSolution: '$(solution)'
     feedsToUse: 'select'
+    includeNuGetOrg: true
+    packagesDirectory: '$(System.DefaultWorkingDirectory)/packages'
+    verbosity: 'Detailed'
 
 - task: VSBuild@1
   inputs:
@@ -30,6 +27,7 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    clean: true
 
 - task: VSTest@2
   inputs:
